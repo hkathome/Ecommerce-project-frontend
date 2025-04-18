@@ -8,11 +8,13 @@ import { map } from 'rxjs/internal/operators/map';
   providedIn: 'root'
 })
 export class ProductService {
-  private baseUrl="http://localhost:9090/api/products?size=100";
+  private baseUrl='http://localhost:9090/api/products';
   constructor(private httpClient: HttpClient) { }
 
-  getProductList(): Observable<Product[]> {
-    return this.httpClient.get<GetResponse>(this.baseUrl).pipe(
+  getProductList(theCategoryId:number): Observable<Product[]> {
+    //need to build URL based on category id ... will come back to this!
+    const newUrl=`${this.baseUrl}/search/findByCategoryId?id=${theCategoryId}`;
+    return this.httpClient.get<GetResponse>(newUrl).pipe(
       map(response=>response._embedded.products)
     );
   }
