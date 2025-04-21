@@ -25,6 +25,12 @@ export class ProductService {
       map(response=>response._embedded.productCategory)
     );
   }
+  getProductsByName(theKeyword:string):Observable<Product[]>{
+    const newUrl=`${this.baseUrl}/search/findByNameContaining?name=${theKeyword}`;
+    return this.httpClient.get<GetResponse>(newUrl).pipe(
+      map(response=>response._embedded.products)
+    );
+  }
 }
 interface GetResponseProductCategory{
   _embedded:{

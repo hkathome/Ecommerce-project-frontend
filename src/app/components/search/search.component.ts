@@ -11,7 +11,7 @@ export class SearchComponent implements OnInit {
   constructor(private router:Router) { }
   doSearch(keyword:String){
     console.log(`value=${keyword}`);
-    this.router.navigateByUrl(`/search/${keyword}`)
+    this.router.navigateByUrl(`/search/${keyword}`);
   }
   ngOnInit(): void {
 
