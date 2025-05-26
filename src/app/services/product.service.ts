@@ -31,7 +31,14 @@ export class ProductService {
       map(response=>response._embedded.products)
     );
   }
+  getProductById(productId:number):Observable<Product>{
+    const newUrl=`${this.baseUrl}/${productId}`;
+    return this.httpClient.get<Product>(newUrl).pipe(
+      map(response=>response)
+    );
+  }
 }
+
 interface GetResponseProductCategory{
   _embedded:{
     productCategory:ProductCategory[];
@@ -42,3 +49,4 @@ interface GetResponse{
     products:Product[];
   }
 }
+
