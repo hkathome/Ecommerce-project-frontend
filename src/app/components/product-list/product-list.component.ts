@@ -18,6 +18,8 @@ export class ProductListComponent implements OnInit {
   thePageSize:number=5; //whatever is selected true in <option selected="true"> 5 </option>
   theTotalElements:number=0;
 
+  previousKeyword: string="";
+
   constructor(private productService: ProductService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -43,11 +45,21 @@ export class ProductListComponent implements OnInit {
   }
   handleSearchProducts(){
     const keyword:string=this.route.snapshot.paramMap.get('keyword')!;
-      this.productService.getProductsByName(keyword).subscribe(
-        data=>{
-          this.products=data;
-        }
-      )
+    
+    //if we have a different keyword than previous then set thePageNumber to 1
+
+    if(this.previousKeyword!=keyword){
+      this.thePageNumber=1;
+    }
+    this.previousKeyword=keyword;
+    console.log(`keyword=${keyword}, thePageNumber=${this.thePageNumber}`);
+      this.productService.searchProductPaginate(
+        this.thePageNumber-1,
+        this.thePageSize,
+        keyword).
+        subscribe(
+          this.processResult()
+      );
   }
   handleListProducts(){
         //check if "id" parameter is available
@@ -84,6 +96,14 @@ export class ProductListComponent implements OnInit {
                                                   this.theTotalElements=data.page.totalElements;
                                                   }
         );
+  }
+  processResult(){
+    return (data:any)=>{
+      this.products=data._embedded.products;
+      this.thePageNumber=data.page.number+1;
+      this.thePageSize=data.page.size;
+      this.theTotalElements=data.page.totalElements;
+      }
   }
 
 }
